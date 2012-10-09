@@ -971,7 +971,7 @@ int VolumeManager::unmountVolume(const char *label, bool force)
 
 	SLOGW("unmountVolume  clean");
 	// cjf@rock-chips.com  sdcard no need to cleanup asec for stable concern.
-    if (strcmp(v->getLabel(),"sdcard")) {
+    if (strcmp(v->getLabel(),"flash")) {
         cleanupAsec(v, force);
     }
 
@@ -1032,5 +1032,19 @@ int VolumeManager::cleanupAsec(Volume *v, bool force) {
         }
     }
     return 0;
+}
+
+
+const char *VolumeManager::getMountPoint(const char *label)
+{
+    VolumeCollection::iterator i;
+    for (i = mVolumes->begin(); i != mVolumes->end(); ++i)
+    {
+        if(!strcmp(label, (*i)->getLabel()))
+        {
+            return (*i)->getMountpoint();
+        }
+    }
+    return NULL;
 }
 

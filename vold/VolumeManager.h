@@ -81,6 +81,9 @@ public:
 
     static char *asecHash(const char *id, char *buffer, size_t len);
 
+    const  char *getMountPoint(const char *label);
+
+
 private:
     VolumeManager();
     Volume *lookupVolume(const char *label);

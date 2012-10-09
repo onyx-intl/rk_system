@@ -379,13 +379,39 @@ int Volume::mountVol() {
 	            return -1;
 	        }
 
+
+            const char* path = mVm->getMountPoint("sdcard");
+            if (access(path, R_OK) != 0) {
+                SLOGE("Access mount point of external sdcard fail.Creat it!");
+                if(mkdir(path, 0777) ){
+                    SLOGE("Failed to create %s (%s)", path, strerror(errno));
+                }
+            }
+
+
 		}else {
+            //add by cjf, mount flash before sdcard
+            if(mVm->mountVolume("flash"))
+            {
+                SLOGE("Failed to mount flash before mount sdcard (%s)", strerror(errno));
+            }
 
 	        /*
 	         * Mount the device on our internal staging mountpoint so we can
 	         * muck with it before exposing it to non priviledged users.
 	         */
 	        errno = 0;
+            
+            const char* path = mVm->getMountPoint("sdcard");
+            if (access(path, R_OK) != 0) {
+                SLOGE("Access mount point of external sdcard fail.Creat it!");
+                if(mkdir(path, 0777) ){
+                    SLOGE("Failed to create %s (%s)", path, strerror(errno));
+                    setState(Volume::State_Idle);
+                    return -1;
+                }
+            }
+
 
 			//cjf@rock-chips.com
 			ret = Fat::doMount(devicePath, getMountpoint(), false, false, 1000, 1015, 0002, true);

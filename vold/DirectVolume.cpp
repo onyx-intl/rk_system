@@ -321,7 +321,7 @@ void DirectVolume::handleDiskRemoved(const char *devpath, NetlinkEvent *evt) {
 	  }
 	
 	  if (getState() == Volume::State_Shared) {
-	  if (!strcmp(getMountpoint(),"/mnt/sdcard")){
+	  if (!strcmp(getLabel(),"sdcard")){
 		  SLOGE("to disable ums lun0");
 		  if ((fd = open("/sys/devices/platform/dwc_otg/gadget/lun0/file",
 							O_WRONLY)) < 0) {
